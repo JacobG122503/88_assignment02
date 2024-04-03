@@ -15,3 +15,8 @@ code {
 #homeButton {
   background-color: mediumseagreen;
 }
+
+#plusminusbuttons {
+  font-size: x-large;
+  color: black;
+}
