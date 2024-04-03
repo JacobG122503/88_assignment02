@@ -33,6 +33,12 @@ const render_products = (ProductsCategory) => {
             </div>
             <p className="text-sm font-medium text-green-600">${product.price}</p>
           </div>
+          <div id="plusminusbuttons">
+            <center>
+              <button type="button" variant="light" /*onClick={() => removeFromCart(el)}*/ > - </button>{" "}
+              <button type="button" variant="light" /*</div>onClick={() => addToCart(el)}*/> + </button>
+            </center>
+          </div>
         </div>
       ))}
     </div>
@@ -80,7 +86,7 @@ const App = () => {
               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
               dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
               dark:focus:ring-blue-500 dark:focus:border-blue-500" type="search" value={query} onChange={handleChange} />
-              <br />
+            <br />
             {Categories && <p className='text-white'>Tags : </p>}
             {Categories.map(tag => <button key={tag} className="inline-block bg-amber-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mt-2" id="homeButton" onClick={() => { handleClick(tag) }}>{tag}</button>)}
           </div>
