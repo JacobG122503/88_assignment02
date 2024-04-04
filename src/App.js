@@ -1,5 +1,6 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { useForm } from "react-hook-form";
 import { Products } from "./Products";
 import { Categories } from "./Categories";
 
@@ -49,6 +50,17 @@ const render_products = (ProductsCategory) => {
 
 
 const App = () => {
+
+  const [viewer, setViewer] = useState(0);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [dataF, setDataF] = useState({});
+
   console.log("Step 1: Load Products in a useState.");
 
   const [query, setQuery] = useState('');
@@ -75,34 +87,7 @@ const App = () => {
 
   console.log("Step 2: Return App :", Products.length, ProductsCategory.length);
 
-  return (
-    <div className="flex fixed flex-row">
-      <div className="h-screen bg-slate-800 p-3 xl:basis-1/5" style={{ minWidth: '65%' }}>
-        {/* <img className="w-full" src={logo} alt="Sunset in the mountains" /> */}
-        <div className="px-6 py-4">
-          <h1 className="text-3xl mb-2 font-bold text-white">Assignment 2 Store</h1>
-          <p className="text-gray-700 text-white">
-            by - <b style={{ color: 'mediumseagreen' }}>Jacob Garcia and Kate Endersby</b>
-          </p>
-          <div className="py-10">
-            <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-              focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
-              dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-              dark:focus:ring-blue-500 dark:focus:border-blue-500" type="search" value={query} onChange={handleChange} />
-              <br />
-            {Categories && <p className='text-white'>Tags : </p>}
-            {Categories.map(tag => <button key={tag} className="inline-block bg-amber-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mt-2" id="homeButton" onClick={() => { handleClick(tag) }}>{tag}</button>)}
-          </div>
-        </div>
-      </div>
-      <div className="ml-5 p-10 xl:basis-4/5">
-        {console.log("Before render :", Products.length, ProductsCategory.length)}
-        {render_products(ProductsCategory)}
-      </div>
-    </div>
-  );
-
-  const [viewer, setViewer] = useState(0);
+  
 
   function Browse() {
     console.log("Step 1: Load Products in a useState.");
@@ -135,11 +120,108 @@ const App = () => {
   } // viewer = 0
 
   function Cart() {
-    return <div></div>;
+   
+    const onSubmit = (data) => {
+      // update hooks
+      setDataF(data);
+      setViewer(2);
+    };
+
+    const cartReturn = () => {
+      setViewer(0);
+      setDataF({});
+    }
+
+    return (
+      <div>
+        <button onClick={cartReturn} className="btn btn-primary">Return</button>
+        <form onSubmit={handleSubmit(onSubmit)} className="container mt-5">
+          <div className="form-group">
+            <input
+              {...register("fullName", { required: true })}
+              placeholder="Full Name" className="form-control"
+            />
+            {errors.fullName && <p className="text-danger">Full Name is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input
+              {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
+              placeholder="Email" className="form-control"
+            />
+            {errors.email && <p className="text-danger">Email is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input
+              {...register("creditCard", { required: true })}
+              placeholder="Credit Card" className="form-control"
+            />
+            {errors.creditCard && <p className="text-danger">Credit Card is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input
+              {...register("address", { required: true })}
+              placeholder="Address" className="form-control"
+            />
+            {errors.address && <p className="text-danger">Address is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input {...register("address2")} placeholder="Address 2" className="form-control" />
+          </div>
+
+          <div className="form-group">
+            <input
+              {...register("city", { required: true })}
+              placeholder="City" className="form-control"
+            />
+            {errors.city && <p className="text-danger">City is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input
+              {...register("state", { required: true })}
+              placeholder="State" className="form-control"
+            />
+            {errors.state && <p className="text-danger">State is required.</p>}
+          </div>
+
+          <div className="form-group">
+            <input {...register("zip", { required: true })} placeholder="Zip" className="form-control"/>
+            {errors.zip && <p className="text-danger">Zip is required.</p>}
+          </div>
+
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    );
   } //viewer = 1
 
   function Confirmation() {
-    return <div></div>;
+    const updateHooks = () => {
+      setViewer(0);
+      setDataF({});
+    };
+
+    return (
+      <div>
+        <h1>Payment Summary</h1>
+        <h3>{dataF.fullName}</h3>
+        <p>{dataF.email}</p>
+        <p>{dataF.creditCard}</p>
+        <p>
+          {dataF.address}
+          {dataF.address2}
+        </p>
+        <p>
+          {dataF.city},{dataF.state} {dataF.zip}{" "}
+        </p>
+
+        <button onClick={updateHooks} className="btn btn-secondary">Submit</button>
+      </div>
+    );
   } //viewer = 2
 
   return (<div>
