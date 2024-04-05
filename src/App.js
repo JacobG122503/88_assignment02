@@ -1,52 +1,11 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { Products } from "./Products";
 import { Categories } from "./Categories";
 
-const render_products = (ProductsCategory) => {
 
-  return <div className='category-section fixed'>
-    {console.log("Step 3 : in render_products ")}
-    <h2 className="text-3xl font-extrabold tracking-tight text-gray-600 category-title">Products ({ProductsCategory.length})</h2>
-
-    <div className="m-6 p-3 mt-10 ml-0 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-10" style={{ maxHeight: '800px', overflowY: 'scroll', minWidth: '1000px' }}>
-      {/* Loop Products */}
-      {ProductsCategory.map((product, index) => (
-        <div key={index} className="group relative shadow-lg" >
-          <div className=" min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-60 lg:aspect-none">
-            <img
-              alt="Product Image"
-              src={product.image}
-              className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-            />
-          </div>
-          <div className="flex justify-between p-3">
-            <div>
-              <h3 className="text-sm text-gray-700">
-                <a href={product.href}>
-                  <span aria-hidden="true" className="absolute inset-0" />
-                  <span style={{ fontSize: '16px', fontWeight: '600' }}>{product.title}</span>
-                </a>
-                <p>Tag - {product.category}</p>
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">Rating: {product.rating.rate} ({product.rating.count})</p>
-            </div>
-            <p className="text-sm font-medium text-green-600">${product.price}</p>
-          </div>
-          <div id="plusminusbuttons">
-            <center>
-              <button type="button" variant="light" /*onClick={() => removeFromCart(el)}*/ > - </button>{" "}
-              <button type="button" variant="light" /*</div>onClick={() => addToCart(el)}*/> + </button>
-            </center>
-          </div>
-        </div>
-      ))}
-      <p><br/><br/></p>
-    </div>
-  </div>
-}; // end render_products
 
 
 
@@ -60,7 +19,77 @@ const App = () => {
     formState: { errors },
   } = useForm();
 
-  const [dataF, setDataF] = useState({});
+  const [paymentInfo, setPaymentInfo] = useState({});
+  const [cart, setCart] = useState([]);
+  const [cartTotal, setCartTotal] = useState(0);
+
+  useEffect(() => {
+    total();
+  }, [cart]);
+
+  const total = () => {
+    let totalVal = 0;
+    for (let i = 0; i < cart.length; i++) {
+      totalVal += cart[i].price;
+    }
+    setCartTotal(totalVal);
+  };
+
+
+  const render_products = (ProductsCategory) => {
+
+    return <div className='category-section fixed'>
+      {console.log("Step 3 : in render_products ")}
+      <h2 className="text-3xl font-extrabold tracking-tight text-gray-600 category-title">Products ({ProductsCategory.length})</h2>
+  
+      <div className="m-6 p-3 mt-10 ml-0 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-10" style={{ maxHeight: '800px', overflowY: 'scroll', minWidth: '1000px' }}>
+        {/* Loop Products */}
+        {ProductsCategory.map((product, index) => (
+          <div key={index} className="group relative shadow-lg" >
+            <div className=" min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-60 lg:aspect-none">
+              <img
+                alt="Product Image"
+                src={product.image}
+                className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+              />
+            </div>
+            <div className="flex justify-between p-3">
+              <div>
+                <h3 className="text-sm text-gray-700">
+                  <a href={product.href}>
+                    <span aria-hidden="true" className="absolute inset-0" />
+                    <span style={{ fontSize: '16px', fontWeight: '600' }}>{product.title}</span>
+                  </a>
+                  <p>Tag - {product.category}</p>
+                </h3>
+                <p className="mt-1 text-sm text-gray-500">Rating: {product.rating.rate} ({product.rating.count})</p>
+              </div>
+              <p className="text-sm font-medium text-green-600">${product.price}</p>
+            </div>
+            <div id="plusminusbuttons">
+              <center>
+                <button type="button" variant="light" /*onClick={() => removeFromCart(el)}*/ > - </button>{" "}
+                <button type="button" variant="light" onClick={() => addToCart(product)}> + </button>
+              </center>
+            </div>
+          </div>
+        ))}
+        <p><br/><br/></p>
+      </div>
+    </div>
+  }; // end render_products
+
+  const cartItems = cart.map((el) => (
+    <div key={el.id}>
+      <img class="img-fluid" src={el.image} width={150} />
+      {el.title}     
+      <div style={{textAlign: "right", fontSize: "20px"}}> ${el.price} </div>
+    </div>
+  ));
+
+  const addToCart = (el) => {
+    setCart([...cart, el]);
+  };
 
   function Browse() {
     console.log("Step 1: Load Products in a useState.");
@@ -134,18 +163,21 @@ const App = () => {
    
     const onSubmit = (data) => {
       // update hooks
-      setDataF(data);
+      setPaymentInfo(data);
       setViewer(2);
     };
 
     const cartReturn = () => {
       setViewer(0);
-      setDataF({});
+      setPaymentInfo({});
     }
 
     return (
       <div>
         <button onClick={cartReturn} className="btn btn-primary">Return</button>
+        <div>{cartItems}</div>
+        <br />
+        <div style={{textAlign: "right", fontSize: "20px", fcolor: "red"}}>Total: ${cartTotal}</div>
         <form onSubmit={handleSubmit(onSubmit)} className="container mt-5">
           <div className="form-group">
             <p>Full Name</p>
@@ -171,7 +203,7 @@ const App = () => {
               {...register("creditCard", { required: true, minLength: 19, maxLength: 19 })}
               placeholder="XXXX-XXXX-XXXX-XXXX" className="form-control"
             />
-            {errors.creditCard && <p className="text-danger">Credit Card is required.</p>}
+            {errors.creditCard && <p className="text-danger">Credit Card is required. Include dashes.</p>}
           </div>
 
           <div className="form-group">
@@ -221,21 +253,24 @@ const App = () => {
   function Confirmation() {
     const updateHooks = () => {
       setViewer(0);
-      setDataF({});
+      setPaymentInfo({});
     };
 
     return (
       <div>
         <h1>Payment Summary</h1>
-        <h3>{dataF.fullName}</h3>
-        <p>{dataF.email}</p>
-        <p>{dataF.creditCard}</p>
+        <div>{cartItems}</div>
+        <br />
+        <div style={{textAlign: "right", fontSize: "20px", fcolor: "red"}}>Total: ${cartTotal}</div>
+        <h3>{paymentInfo.fullName}</h3>
+        <p>{paymentInfo.email}</p>
+        <p>{paymentInfo.creditCard}</p>
         <p>
-          {dataF.address}
-          {dataF.address2}
+          {paymentInfo.address}
+          {paymentInfo.address2}
         </p>
         <p>
-          {dataF.city},{dataF.state} {dataF.zip}{" "}
+          {paymentInfo.city},{paymentInfo.state} {paymentInfo.zip}{" "}
         </p>
 
         <button onClick={updateHooks} className="btn btn-secondary">Submit</button>
