@@ -165,63 +165,71 @@ const App = () => {
         <button onClick={cartReturn} className="btn btn-primary">Return</button>
         <form onSubmit={handleSubmit(onSubmit)} className="container mt-5">
           <div className="form-group">
+            <p>Full Name</p>
             <input
               {...register("fullName", { required: true })}
-              placeholder="Full Name" className="form-control"
+              placeholder="" className="form-control"
             />
             {errors.fullName && <p className="text-danger">Full Name is required.</p>}
           </div>
 
           <div className="form-group">
+            <p>Email</p>
             <input
               {...register("email", { required: true, pattern: /^\S+@\S+$/i })}
-              placeholder="Email" className="form-control"
+              placeholder="" className="form-control"
             />
             {errors.email && <p className="text-danger">Email is required.</p>}
           </div>
 
           <div className="form-group">
+            <p>Credit Card</p>
             <input
-              {...register("creditCard", { required: true })}
-              placeholder="Credit Card" className="form-control"
+              {...register("creditCard", { required: true, minLength: 19, maxLength: 19 })}
+              placeholder="XXXX-XXXX-XXXX-XXXX" className="form-control"
             />
             {errors.creditCard && <p className="text-danger">Credit Card is required.</p>}
           </div>
 
           <div className="form-group">
+            <p>Address</p>
             <input
               {...register("address", { required: true })}
-              placeholder="Address" className="form-control"
+              placeholder="1234 Main St" className="form-control"
             />
             {errors.address && <p className="text-danger">Address is required.</p>}
           </div>
 
           <div className="form-group">
-            <input {...register("address2")} placeholder="Address 2" className="form-control" />
+            <p>Address 2</p>
+            <input {...register("address2")} placeholder="Apartment, Studio, or Floor" className="form-control" />
           </div>
 
           <div className="form-group">
+            <p>City</p>
             <input
               {...register("city", { required: true })}
-              placeholder="City" className="form-control"
+              placeholder="" className="form-control"
             />
             {errors.city && <p className="text-danger">City is required.</p>}
           </div>
 
           <div className="form-group">
+            <p>State</p>
             <input
               {...register("state", { required: true })}
-              placeholder="State" className="form-control"
+              placeholder="" className="form-control"
             />
             {errors.state && <p className="text-danger">State is required.</p>}
           </div>
 
           <div className="form-group">
-            <input {...register("zip", { required: true })} placeholder="Zip" className="form-control"/>
+            <p>Zip</p>
+            <input {...register("zip", { required: true, minLength: 5, maxLength: 5 })} placeholder="12345" className="form-control"/>
             {errors.zip && <p className="text-danger">Zip is required.</p>}
           </div>
 
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <button type="submit" className="btn btn-primary">Order</button>
         </form>
       </div>
     );
@@ -252,7 +260,7 @@ const App = () => {
     );
   } //viewer = 2
 
-  return (<div>
+  return (<div id="return">
     {viewer === 0 && <Browse />}
     {viewer === 1 && <Cart />}
     {viewer === 2 && <Confirmation />}
