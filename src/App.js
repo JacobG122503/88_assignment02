@@ -62,34 +62,6 @@ const App = () => {
 
   const [dataF, setDataF] = useState({});
 
-  console.log("Step 1: Load Products in a useState.");
-
-  const [query, setQuery] = useState('');
-  const [ProductsCategory, setProductsCategory] = useState(Products);
-
-  const handleChange = (e) => {
-    setQuery(e.target.value);
-    console.log("Step 6 : in handleChange, Target Value :", e.target.value, " Query Value :", query);
-    const results = Products.filter(eachProduct => {
-      if (e.target.value === "") return ProductsCategory;
-      return eachProduct.title.toLowerCase().includes(e.target.value.toLowerCase())
-    });
-    setProductsCategory(results);
-  }
-
-  function handleClick(tag) {
-    console.log("Step 4 : in handleClick", tag);
-    let filtered = Products.filter(cat => cat.category === tag);
-    // modify useState
-    setProductsCategory(filtered);
-    // ProductsCategory = filtered;
-    console.log("Step 5 : ", Products.length, ProductsCategory.length);
-  }
-
-  console.log("Step 2: Return App :", Products.length, ProductsCategory.length);
-
-  
-
   function Browse() {
     console.log("Step 1: Load Products in a useState.");
   
