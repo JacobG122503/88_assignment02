@@ -78,7 +78,14 @@ const App = () => {
       setProductsCategory(results);
     }
   
+    //Category tag function
     function handleClick(tag) {
+
+      if (tag === "no tag") {
+        setProductsCategory(Products);
+        return;
+      }
+
       console.log("Step 4 : in handleClick", tag);
       let filtered = Products.filter(cat => cat.category === tag);
       // modify useState
@@ -105,7 +112,10 @@ const App = () => {
                 dark:focus:ring-blue-500 dark:focus:border-blue-500" type="search" value={query} onChange={handleChange} />
                 <br />
               {Categories && <p className='text-white'>Tags : </p>}
+              <button className="inline-block bg-amber-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mt-2" id="homeButton" onClick={() => { handleClick("no tag") }}>No Tag</button>
               {Categories.map(tag => <button key={tag} className="inline-block bg-amber-600 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mt-2" id="homeButton" onClick={() => { handleClick(tag) }}>{tag}</button>)}
+              <br/><br/><br/><br/><br/><br/><br/>
+              <br/><br/><br/><br/><br/><br/><br/>
               <button className="block bg-amber-600 rounded-full px-4 py-2 text-lg font-semibold text-gray-700 mx-auto mt-5" id="cartButton" onClick={() => setViewer(1)}>Cart</button>
             </div>
           </div>
