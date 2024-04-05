@@ -16,6 +16,11 @@ code {
   background-color: mediumseagreen;
 }
 
+#cartButton {
+  background-color: blue;
+  color:white;
+}
+
 #plusminusbuttons {
   font-size: x-large;
   color: black;
