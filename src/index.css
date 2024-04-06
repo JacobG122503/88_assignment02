@@ -24,4 +24,5 @@ code {
 #plusminusbuttons {
   font-size: x-large;
   color: black;
+  pointer-events: auto;
 }
