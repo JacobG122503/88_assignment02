@@ -30,7 +30,7 @@ const App = () => {
   const total = () => {
     let totalVal = 0;
     for (let i = 0; i < cart.length; i++) {
-      totalVal += cart[i].price;
+      totalVal += (cart[i].price * cart[i].amount);
     }
     setCartTotal(totalVal);
   };
@@ -208,9 +208,14 @@ const App = () => {
       setPaymentInfo({});
     }
 
+    total();
+
     return (
       <div>
+        <br />
         <button onClick={cartReturn} className="btn btn-primary">Return</button>
+        <br />
+        <br />
         <div>{cartItems}</div>
         <br />
         <div style={{textAlign: "right", fontSize: "20px", fcolor: "red"}}>Total: ${cartTotal}</div>
@@ -280,8 +285,10 @@ const App = () => {
             <input {...register("zip", { required: true, minLength: 5, maxLength: 5 })} placeholder="12345" className="form-control"/>
             {errors.zip && <p className="text-danger">Zip is required.</p>}
           </div>
-
+          
+          <br />
           <button type="submit" className="btn btn-primary">Order</button>
+          <br />
         </form>
       </div>
     );
