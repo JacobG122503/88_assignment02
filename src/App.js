@@ -68,7 +68,7 @@ const App = () => {
             </div>
             <div id="plusminusbuttons">
               <center>
-                <button type="button" variant="light" /*onClick={() => removeFromCart(el)}*/ > - </button>{" "}
+                <button type="button" variant="light" onClick={() => removeFromCart(product)} > - </button>{" "}
                 <button type="button" variant="light" onClick={() => addToCart(product)}> + </button>
               </center>
             </div>
@@ -81,14 +81,50 @@ const App = () => {
 
   const cartItems = cart.map((el) => (
     <div key={el.id}>
-      <img class="img-fluid" src={el.image} width={150} />
-      {el.title}     
-      <div style={{textAlign: "right", fontSize: "20px"}}> ${el.price} </div>
+      <img class="img-fluid" src={el.image} width={150}/>
+      {el.title} 
+      <div style={{textAlign: "right", fontSize: "20px"}}> <strong>{el.amount} X </strong> ${el.price} = ${el.amount * el.price} </div>
     </div>
   ));
 
   const addToCart = (el) => {
-    setCart([...cart, el]);
+
+    const cartEl = {
+      "id": el.id,
+      "title": el.title,
+      "price": el.price,
+      "image": el.image,
+      "amount": 1
+  }
+
+  var newItem = true;
+
+    for (let i = 0; i < cart.length; i++) {
+      if(el.id == cart[i].id) {
+        cart[i].amount++;
+        newItem = false;
+      }
+    }
+    if(newItem) {
+      setCart([...cart, cartEl]);
+    }
+  };
+
+  const removeFromCart = (el) => {
+    let hardCopy = [...cart];
+    var index;
+    for(let i = 0; i < cart.length; i++) {
+      if(el.id == cart[i].id) {
+        index = i;
+      }
+    }
+    if(cart[index].amount > 1) {
+      console.log("removing");
+      cart[index].amount--;
+    } else {
+    hardCopy = hardCopy.filter((cartItem) => cartItem.id !== el.id);
+    setCart(hardCopy);
+    }
   };
 
   function Browse() {
@@ -162,7 +198,7 @@ const App = () => {
   function Cart() {
    
     const onSubmit = (data) => {
-      // update hooks
+     document.getElementById("fullname").value = "";
       setPaymentInfo(data);
       setViewer(2);
     };
@@ -178,12 +214,13 @@ const App = () => {
         <div>{cartItems}</div>
         <br />
         <div style={{textAlign: "right", fontSize: "20px", fcolor: "red"}}>Total: ${cartTotal}</div>
-        <form onSubmit={handleSubmit(onSubmit)} className="container mt-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="container mt-5" id="paymentForm">
           <div className="form-group">
             <p>Full Name</p>
             <input
               {...register("fullName", { required: true })}
               placeholder="" className="form-control"
+              id="fullname"
             />
             {errors.fullName && <p className="text-danger">Full Name is required.</p>}
           </div>
@@ -200,10 +237,10 @@ const App = () => {
           <div className="form-group">
             <p>Credit Card</p>
             <input
-              {...register("creditCard", { required: true, minLength: 19, maxLength: 19 })}
-              placeholder="XXXX-XXXX-XXXX-XXXX" className="form-control"
+              {...register("creditCard", { required: true, minLength: 16, maxLength: 16})}
+              placeholder="XXXX XXXX XXXX XXXX" className="form-control"
             />
-            {errors.creditCard && <p className="text-danger">Credit Card is required. Include dashes.</p>}
+            {errors.creditCard && <p className="text-danger">Credit Card is required.</p>}
           </div>
 
           <div className="form-group">
@@ -254,6 +291,7 @@ const App = () => {
     const updateHooks = () => {
       setViewer(0);
       setPaymentInfo({});
+      setCart([]);
     };
 
     return (
@@ -270,7 +308,7 @@ const App = () => {
           {paymentInfo.address2}
         </p>
         <p>
-          {paymentInfo.city},{paymentInfo.state} {paymentInfo.zip}{" "}
+          {paymentInfo.city}, {paymentInfo.state} {paymentInfo.zip}{" "}
         </p>
 
         <button onClick={updateHooks} className="btn btn-secondary">Submit</button>
